@@ -16,6 +16,11 @@ execute:
   execute_notebooks: force
   timeout: 100
   allow_errors: false 
+
+repository:
+  url: https://github.com/Wcamaro/SVI_Jupyter_book# Online location of your book
+  branch: review # Which branch of the repository should be used when creating links (optional)
+
 # Add GitHub buttons to your book
 # See https://jupyterbook.org/customize/config.html#add-a-link-to-your-repository
 html:
