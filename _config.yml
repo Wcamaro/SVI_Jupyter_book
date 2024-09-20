@@ -16,7 +16,12 @@ execute:
   execute_notebooks: force
   timeout: 100
   allow_errors: false 
-
+# Add GitHub buttons to your book
+# See https://jupyterbook.org/customize/config.html#add-a-link-to-your-repository
+html:
+  use_issues_button: true
+  use_repository_button: true
+  announcement: "⚠️This is a TEST Version, this is not an official website⚠️"
 
 
 # Add a bibtex file so that we can create citations
