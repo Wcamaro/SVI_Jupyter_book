@@ -1,0 +1,70 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+
+format: jb-book #Defines the structure of this Table of Contents (e.g., how to interpret the key names). jb-book tells Jupyter Book to expect chapters and parts terminology 
+root: index  #The first page of your book (aka, the “root page”). All paths for chapters/sections will be relative to this root document.
+parts:
+- caption: Introduction
+  chapters:     # A list of entries, each of which maps onto chapters of your book.
+    - file: introduction/overview
+    - file: introduction/getting_started
+    - file: introduction/thecode
+    - file: introduction/troubleshooting
+- caption: Coding Fundamentals
+  chapters:     # A list of entries, each of which maps onto chapters of your book.
+    - file: Coding_fundamentals/basics
+- caption: Social Vulnerability Index Description
+  chapters:     # A list of entries, each of which maps onto chapters of your book.
+    - file: SVI_Descr/Why
+    - file: SVI_Descr/Indicators
+    - file: SVI_Descr/Domains
+    - file: SVI_Descr/Dimensions
+    - file: SVI_Descr/Social_Vulnerability
+- caption: Step by step user guide
+  chapters:     # A list of entries, each of which maps onto chapters of your book.
+    - file: UsrGuide/Folder_Structure
+    - file: UsrGuide/External_Data
+    - file: UsrGuide/Internal_Data
+    - file: UsrGuide/Methodologies
+      sections:     # A list of entries that define sub-sections of a chapter. This is useful if you’d like to split a chapter across multiple pages.
+        - file: UsrGuide/Methodologies/Overview
+        - file: UsrGuide/Methodologies/Mean_of_all_Indicators
+        - file: UsrGuide/Methodologies/Weighted_mean
+        - file: UsrGuide/Methodologies/Using_PCA
+        - file: UsrGuide/Methodologies/Using_PCA_Each_domain
+    - file: UsrGuide/Comparing_Methodologies
+- caption: Case Studies
+  chapters:     # A list of entries, each of which maps onto chapters of your book.
+    - file: Cities/Athens
+      sections:     # A list of entries that define sub-sections of a chapter. This is useful if you’d like to split a chapter across multiple pages.
+        - file: Cities/Athens/Overview
+        - file: Cities/Athens/Census_Data
+        - file: Cities/Athens/Indicators
+        - file: Cities/Athens/Domains
+        - file: Cities/Athens/Dimensions
+        - file: Cities/Athens/Vulnerability_Index
+    - file: Cities/Cork
+      sections:     # A list of entries that define sub-sections of a chapter. This is useful if you’d like to split a chapter across multiple pages.
+        - file: Cities/Cork/Overview
+        - file: Cities/Cork/Census_Data
+        - file: Cities/Cork/Indicators
+        - file: Cities/Cork/Domains
+        - file: Cities/Cork/Dimensions
+        - file: Cities/Cork/Vulnerability_Index
+    - file: Cities/Logrono
+      sections:     # A list of entries that define sub-sections of a chapter. This is useful if you’d like to split a chapter across multiple pages.
+        - file: Cities/Logrono/Overview
+        - file: Cities/Logrono/Census_Data
+        - file: Cities/Logrono/Indicators
+        - file: Cities/Logrono/Domains
+        - file: Cities/Logrono/Dimensions
+        - file: Cities/Logrono/Vulnerability_Index
+    - file: Cities/Milan
+      sections:     # A list of entries that define sub-sections of a chapter. This is useful if you’d like to split a chapter across multiple pages.
+        - file: Cities/Milan/Overview
+        - file: Cities/Milan/Census_Data
+        - file: Cities/Milan/Indicators
+        - file: Cities/Milan/Domains
+        - file: Cities/Milan/Dimensions
+        - file: Cities/Milan/Vulnerability_Index

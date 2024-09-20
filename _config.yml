@@ -1,0 +1,24 @@
+#######################################################################################
+# A default configuration that will be loaded for all jupyter books
+# See the documentation for help and more options: 
+# https://jupyterbook.org/customize/config.html
+
+#######################################################################################
+# Book seetings
+title: Social Vulnerability Index For Cities
+author: Walther Camaro Garcia, Denise McCullagh, Declan Dunne, Cathal Gannon, Christopher Phillips, Lydia Cumiskey
+logo: Vulnerability_Index_Logo.png
+description: Handbook for the implementation and integration of the Social Vulnerability Index for Cities considering several Envvironmental Hazards 
+
+# Force re-execution of notebooks on each build.
+# See https://jupyterbook.org/content/execute.html
+execute:
+  execute_notebooks: force
+  timeout: 100
+  allow_errors: false 
+
+
+
+# Add a bibtex file so that we can create citations
+#bibtex_bibfiles:
+#  - references.bib
