@@ -206,7 +206,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../Overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Folder_Structure.html">Folder_Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../External_Data.html">External_Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Internal_Data.html">HInternal_Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Internal_Data.html">Internal_Data</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../Methodologies.html">Methodologies</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="Overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Mean_of_all_Indicators.html">Mean_of_all_Indicators</a></li>
@@ -454,6 +454,43 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="using-pca-each-domain">
 <h1>Using_PCA_Each_domain<a class="headerlink" href="#using-pca-each-domain" title="Link to this heading">#</a></h1>
+<p>Using PCA of each domain to find the weight coefficient based on correlation between member of domain. And then using mean of each domain PCA as final vulnerability</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>##############
+### Domain ###
+##############
+# copy to new new data set
+personsDataN_logrono_PCA_Domain &lt;- personsDataN_logrono
+### Domain - Age 
+#ageIndicators &lt;- subset(personsDataN_logrono, select=c(&#39;c_ab0t4_pct_Z&#39;, &#39;c_ag0t4_pct_Z&#39;, &#39;c_amo75_pct_Z&#39;, &#39;c_afo75_pct_Z&#39;))
+ageIndicators &lt;- subset(personsDataN_logrono, select=c(&#39;c_ab0t4_pct_N&#39;, &#39;c_ag0t4_pct_N&#39;, &#39;c_amo75_pct_N&#39;, &#39;c_afo75_pct_N&#39;))
+#cov(personsDataZ_logrono[,2:ncol(personsDataZ_logrono)])
+cor(ageIndicators)
+pca_model_ageDomain &lt;- prcomp(ageIndicators,scale = TRUE)
+
+##,centered = TRUE)
+summary(pca_model_ageDomain)
+#screeplot(pca_model_ageDomain,type = &quot;lines&quot;)
+
+#plot(pca_model_ageDomain$x,xlim= c(-4.,5.5), ylim = c(-4.,5.5))
+#text(pca_model_ageDomain$x,labels = rownames(ageIndicators),adj = c(0.3,-0.5),cex = 0.1) 
+#abline(v = 0 ,h = 0)
+
+prpotion_variance_age&lt;- summary(pca_model_ageDomain)$importance[2,]
+ageDomain_pca_pr &lt;- sweep(pca_model_ageDomain$x[,1:ncol(ageIndicators)], 2, unlist(prpotion_variance_age), &quot;*&quot;)
+# apply Normilize_values function to normilize PCs values
+ageDomain_pca_pr[,1:4] &lt;- apply(ageDomain_pca_pr[,1:4],2, Normilize_values)
+personsDataN_logrono_PCA_Domain$ageDomain_pca &lt;- rowMeans(ageDomain_pca_pr, na.rm = TRUE)
+
+# just for checking
+ageDomain_mean &lt;- rowMeans(ageIndicators, na.rm = TRUE)
+# just to compare 
+print(paste(&#39;mean of age domain&#39;, ageDomain_mean, &#39;pca of agedomain&#39;,personsDataN_logrono_PCA_Domain$ageDomain_pca ))
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># the above process for age domain should repeat for each domain </span>
+<span class="c1"># then the mean of all PCA of each domain can be considred ad vulrenability index</span>
+</pre></div>
+</div>
 </section>
 
     <script type="text/x-thebe-config">

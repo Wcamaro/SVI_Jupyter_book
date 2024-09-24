@@ -206,7 +206,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../Overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Folder_Structure.html">Folder_Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../External_Data.html">External_Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Internal_Data.html">HInternal_Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Internal_Data.html">Internal_Data</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../Methodologies.html">Methodologies</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="Overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Mean_of_all_Indicators.html">Mean_of_all_Indicators</a></li>
@@ -454,6 +454,51 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="using-pca">
 <h1>Using_PCA<a class="headerlink" href="#using-pca" title="Link to this heading">#</a></h1>
+<p>Using PCA of all indicators to find the weight coefficient of each indicators based on correlation between each indicators.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>#to extract the normilized indicators define st and end as follows:
+st = 16
+end = ncol(personsDataN_logrono) -2 # should be 29 
+end
+pca_model_all &lt;- prcomp(personsDataN_logrono[,st:end],scale = TRUE)
+
+##,centered = TRUE)
+summary(pca_model_all)
+screeplot(pca_model_all,type = &quot;lines&quot;)
+
+plot(pca_model_all$x,xlim= c(-4.,5.5), ylim = c(-4.,5.5))
+text(pca_model_all$x,labels = rownames(personsDataN_logrono),adj = c(0.3,-0.5),cex = 0.1) 
+abline(v = 0 ,h = 0)
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>allIndicators &lt;- subset(personsDataN_logrono, select=c(st:end))
+print(names(allIndicators))
+# propotion variance associated to each PCs can be considered as weight of that PC
+prpotion_variance &lt;- summary(pca_model_all)$importance[2,]
+
+#multiply each column by proportion varianve (each indicators multiply by weighted cofficent)
+# there are 14 PCs 
+pca_pr &lt;- sweep(pca_model_all$x[,1:14], 2, unlist(prpotion_variance), &quot;*&quot;)
+#print(pca_pr)
+# apply Normilize_values function to normilize PCs values
+pca_pr[,1:14] &lt;- apply(pca_pr[,1:14],2, Normilize_values)
+#personsDataZ_logrono_PCA &lt;- cbind(personsDataZ_logrono,pca_model_all$x[,1:14])
+# if you wish to have step by step calculation uncomment the following line
+#personsDataN_logrono_PCA &lt;- cbind(personsDataN_logrono,pca_pr)
+
+personsDataN_logrono$pca_all &lt;- rowMeans(pca_pr, na.rm = TRUE)
+#personsDataNZ_logrono$pca_all &lt;- Normilize_values(personsDataNZ_logrono$pca_all)
+
+# compare these three method results
+print(paste(&#39;mean of all&#39;, personsDataN_logrono$meanall, &#39;weighted mean&#39;, personsDataN_logrono$mean_weigth,
+            &#39;pca of all&#39;,personsDataN_logrono$pca_all ))
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">## output the data as a csv as a backup </span>
+<span class="c1">## if you decied which method to use save in 3_output subdurectory</span>
+<span class="n">outputFile</span> <span class="o">&lt;-</span> <span class="n">file</span><span class="o">.</span><span class="n">path</span><span class="p">(</span><span class="n">pipelineDir</span><span class="p">,</span><span class="s2">&quot;Vul_data_2021_logrono_3method.csv&quot;</span><span class="p">)</span>
+<span class="n">write</span><span class="o">.</span><span class="n">csv</span><span class="p">(</span><span class="n">personsDataN_logrono</span><span class="p">,</span> <span class="n">outputFile</span><span class="p">,</span> <span class="n">row</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 
     <script type="text/x-thebe-config">

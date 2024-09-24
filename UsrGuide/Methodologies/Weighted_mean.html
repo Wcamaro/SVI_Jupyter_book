@@ -206,7 +206,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../Overview.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../Folder_Structure.html">Folder_Structure</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../External_Data.html">External_Data</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../Internal_Data.html">HInternal_Data</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../Internal_Data.html">Internal_Data</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="../Methodologies.html">Methodologies</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="Overview.html">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="Mean_of_all_Indicators.html">Mean_of_all_Indicators</a></li>
@@ -454,6 +454,54 @@ document.write(`
                   
   <section class="tex2jax_ignore mathjax_ignore" id="weighted-mean">
 <h1>Weighted_mean<a class="headerlink" href="#weighted-mean" title="Link to this heading">#</a></h1>
+<p>to allow the indictors effect differently (weight based on number of indicators of each domain, e.g. the domain with one indicator has weight = 1 and age domain indicators with 4 indicators have weight = 0.25) so
+Vul_WM = ((〖Ind〗_1* W_1+〖Ind〗<em>2* W</em>(2 )+⋯.+ 〖Ind〗_n* W_n  ))/n   where W is a weight coefficient for each indicators.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1">#function to find the weigth of each indicators based on number of indicator in each domain</span>
+<span class="n">get_weight</span> <span class="o">&lt;-</span> <span class="n">function</span><span class="p">(</span><span class="n">var</span><span class="p">){</span>
+    <span class="n">Domains</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ageDomain</span><span class="p">,</span><span class="n">healthDomain</span><span class="p">,</span> <span class="n">mobilityDomain</span><span class="p">,</span> <span class="n">incomeDomain</span><span class="p">,</span> <span class="n">socialNetworkDomain</span>
+            <span class="p">,</span><span class="n">localKnowledgeDomain</span><span class="p">,</span><span class="n">tenureDomain</span><span class="p">,</span><span class="n">income_cu_7500_26</span><span class="p">)</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">df</span> <span class="ow">in</span> <span class="n">Domains</span><span class="p">){</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">var</span> <span class="o">%</span><span class="ow">in</span><span class="o">%</span> <span class="n">names</span><span class="p">(</span><span class="n">df</span><span class="p">))</span>
+            <span class="c1">#return the nuber on indicators of a domain</span>
+            <span class="k">return</span><span class="p">(</span><span class="nb">round</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="p">(</span><span class="n">ncol</span><span class="p">(</span><span class="n">df</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span><span class="mi">2</span><span class="p">))</span>
+    <span class="p">}</span>
+    <span class="c1"># return zero means giving 0 weirht and not consider it as indicator if not belong to any domain </span>
+    <span class="c1"># or you can change this to 1 to give weight of one and consider it as a indicator even not belongs to any domain.</span>
+    <span class="c1"># this depends on your decision</span>
+    <span class="k">return</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> 
+<span class="p">}</span>
+<span class="c1">## function to calculate the lenght of variable x -6 (witout &#39;_pct_N&#39;)</span>
+<span class="n">nchar_6</span> <span class="o">&lt;-</span> <span class="n">function</span><span class="p">(</span><span class="n">x</span><span class="p">){</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">nchar</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">-</span><span class="mi">6</span><span class="p">)</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># second method weighted mean </span>
+<span class="c1"># this is based on number of each domin members for example 0.25 weigt for domin with 4 indicators</span>
+<span class="c1"># find the number of member of each domin</span>
+<span class="n">st</span> <span class="o">&lt;-</span> <span class="mi">16</span>
+<span class="n">end</span> <span class="o">&lt;-</span> <span class="n">ncol</span><span class="p">(</span><span class="n">personsDataN_logrono</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span>
+<span class="c1"># find lenght of each standard indicators name (witout &#39;_pct_N&#39;)</span>
+<span class="n">l_var</span> <span class="o">&lt;-</span> <span class="n">lapply</span><span class="p">(</span><span class="n">names</span><span class="p">(</span><span class="n">personsDataN_logrono</span><span class="p">[</span><span class="n">st</span><span class="p">:</span><span class="n">end</span><span class="p">]),</span><span class="n">nchar_6</span><span class="p">)</span>
+<span class="c1"># find weigth cofficient of each indicators</span>
+<span class="n">var_weight</span> <span class="o">&lt;-</span> 
+<span class="n">lapply</span><span class="p">(</span><span class="n">substr</span><span class="p">(</span><span class="n">names</span><span class="p">(</span><span class="n">personsDataN_logrono</span><span class="p">[</span><span class="n">st</span><span class="p">:</span><span class="n">end</span><span class="p">]),</span><span class="mi">1</span><span class="p">,</span><span class="n">l_var</span><span class="p">),</span><span class="n">get_weight</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">paste</span><span class="p">(</span><span class="s1">&#39;indicator: &#39;</span><span class="p">,</span><span class="n">substr</span><span class="p">(</span><span class="n">names</span><span class="p">(</span><span class="n">personsDataN_logrono</span><span class="p">[</span><span class="n">st</span><span class="p">:</span><span class="n">end</span><span class="p">]),</span><span class="mi">1</span><span class="p">,</span><span class="n">l_var</span><span class="p">),</span> <span class="s1">&#39;weight:  &#39;</span><span class="p">,</span><span class="n">var_weight</span><span class="p">))</span>
+<span class="c1">#print(substr(names(personsDataN_logrono[st:end]),1,l_var),var_weight )</span>
+<span class="c1">#mean_weight &lt;- sweep($x[,1:14], 2, unlist(prpotion_variance), &#39;*&#39;)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>#personsDataN_logrono[st:end]
+mean_weight &lt;- sweep(personsDataN_logrono[st:end], 2, unlist(var_weight), &quot;*&quot;)
+#mean_weight
+# if you want to keep step by step calculation uncomment the following line
+#personsDataN_logrono &lt;- cbind(personsDataN_logrono,mean_weight)
+# calculate mean of weighted indicators
+personsDataN_logrono$mean_weigth &lt;- rowMeans(mean_weight, na.rm = TRUE)
+# compare two methods mean all and mean weight method
+print(paste(&#39;mean all: &#39;,personsDataN_logrono$meanall, &#39;mean weight:  &#39;,personsDataN_logrono$mean_weigth))
+</pre></div>
+</div>
 </section>
 
     <script type="text/x-thebe-config">
